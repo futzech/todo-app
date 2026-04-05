@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="app-page">
+  <!-- APP CONTAINER -->
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <h1 class="logo">Tasks</h1>
+        <span id="username" class="username">username</span>
+      </div>
+      <button id="logoutBtn" class="btn-logout">Выход</button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Add Task -->
+      <section class="todo-input-section">
+        <div class="input-group large">
+          <input type="text" id="newTaskInput" placeholder="Введите новую задачу..." autocomplete="off">
+          <button id="addTaskBtn" class="btn-add btn-primary">+ Добавить</button>
+        </div>
+      </section>
+
+      <!-- Stats & Tasks -->
+      <section class="tasks-section">
+        <div class="tasks-stats">
+          <div class="stats">
+            <span id="totalTasks" class="stat-number">0</span>
+            <span class="stat-label">Всего</span>
+          </div>
+          <div class="stats">
+            <span id="completedTasks" class="stat-number">0</span>
+            <span class="stat-label">Выполнено</span>
+          </div>
+        </div>
+
+        <ul id="tasksList" class="tasks-list"></ul>
+
+        <!-- Edit Modal -->
+        <div id="editModal" class="modal">
+          <div class="modal-content">
+            <h3>Редактировать задачу</h3>
+            <input type="text" id="editTaskInput" placeholder="Название задачи" autocomplete="off">
+            <div class="modal-actions">
+              <button id="saveEditBtn" class="btn-primary">Сохранить</button>
+              <button id="cancelEditBtn" class="btn-secondary">Отмена</button>
+            </div>
+          </div>
+        </div>
+
+        <script src="script.js"></script>
+</body>
+
+</html>

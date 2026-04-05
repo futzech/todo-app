@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Todo App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="register-page">
+  <div class="container">
+    <div class="glass-card">
+      <div class="logo">
+        <h1>TodoApp</h1>
+        <span>Registration Page</span>
+      </div>
+      <form id="registerForm" class="auth-form">
+        <div class="input-group">
+          <input type="text" id="regUsername" placeholder="Username" required>
+          <label>Username</label>
+        </div>
+        <div class="input-group">
+          <input type="password" id="regPassword" placeholder="Password" required>
+          <label>Password</label>
+        </div>
+        <button type="submit" class="btn-primary">Register</button>
+        <div id="registerError" class="error-message"></div>
+      </form>
+      <p class="switch-link">Have account? <a href="login.html">Login</a></p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>
