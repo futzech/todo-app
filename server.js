@@ -192,6 +192,10 @@ app.delete('/api/tasks/:id', authenticateToken, async (req, res) => {
   }
 });
 
+app.get('/password-generator.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'password-generator.html'));
+});
+
 // SPA fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
