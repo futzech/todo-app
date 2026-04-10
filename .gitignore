@@ -3,3 +3,9 @@ node_modules/
 users.json
 tasks.json
 .DS_Store
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
