@@ -12,20 +12,17 @@
 </head>
 
 <body class="app-page">
-  <!-- APP CONTAINER -->
   <div class="app-container">
-    <!-- Header -->
     <header class="app-header">
       <div class="header-left">
+        <a href="/dashboard.html" class="back-link"> Dashboard →</a>
         <h1 class="logo">Tasks</h1>
         <span id="username" class="username">username</span>
       </div>
       <button id="logoutBtn" class="btn-logout">Выход</button>
     </header>
 
-    <!-- Main Content -->
     <main class="main-content">
-      <!-- Add Task -->
       <section class="todo-input-section">
         <div class="input-group large">
           <input type="text" id="newTaskInput" placeholder="Введите новую задачу..." autocomplete="off">
@@ -33,7 +30,6 @@
         </div>
       </section>
 
-      <!-- Stats & Tasks -->
       <section class="tasks-section">
         <div class="tasks-stats">
           <div class="stats">
@@ -48,7 +44,7 @@
 
         <ul id="tasksList" class="tasks-list"></ul>
 
-        <!-- Edit Modal -->
+
         <div id="editModal" class="modal">
           <div class="modal-content">
             <h3>Редактировать задачу</h3>

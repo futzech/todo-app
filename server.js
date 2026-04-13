@@ -10,18 +10,15 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-dev';
 
-// Middleware
 app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Data storage paths
 const USERS_FILE = path.join(__dirname, 'users.json');
 const TASKS_FILE = path.join(__dirname, 'tasks.json');
 
-// Safe file init
 async function ensureFileExists(filePath, defaultContent) {
   try {
     await fs.access(filePath);
@@ -31,7 +28,6 @@ async function ensureFileExists(filePath, defaultContent) {
   }
 }
 
-// Init on startup
 async function initData() {
   try {
     await ensureFileExists(USERS_FILE, { users: [] });
@@ -42,7 +38,6 @@ async function initData() {
   }
 }
 
-// Auth middleware
 const authenticateToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
@@ -60,7 +55,6 @@ const authenticateToken = async (req, res, next) => {
   }
 };
 
-// Routes
 app.post('/api/register', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -196,12 +190,57 @@ app.get('/password-generator.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'password-generator.html'));
 });
 
-// SPA fallback
+app.post('/api/rpn/calculate', authenticateToken, (req, res) => {
+  try {
+    const { expression } = req.body;
+    
+    if (!expression) {
+      return res.json({ success: false, error: 'Выражение не задано' });
+    }
+
+    const tokens = expression.trim().split(/\s+/).filter(t => t);
+    const stack = [];
+
+    for (const token of tokens) {
+      if (!isNaN(token)) {
+        stack.push(parseFloat(token));
+      } else if (['+', '-', '*', '/'].includes(token)) {
+        if (stack.length < 2) {
+          return res.json({ success: false, error: 'Недостаточно операндов' });
+        }
+        const b = stack.pop();
+        const a = stack.pop();
+        
+        switch (token) {
+          case '+': stack.push(a + b); break;
+          case '-': stack.push(a - b); break;
+          case '*': stack.push(a * b); break;
+          case '/': 
+            if (b === 0) return res.json({ success: false, error: 'Деление на ноль' });
+            stack.push(a / b); 
+            break;
+        }
+      } else {
+        return res.json({ success: false, error: `Неизвестная операция: ${token}` });
+      }
+    }
+
+    if (stack.length !== 1) {
+      return res.json({ success: false, error: 'Некорректное выражение' });
+    }
+
+    res.json({ success: true, result: Number(stack[0].toFixed(4)) });
+  } catch (error) {
+    console.error('RPN error:', error);
+    res.json({ success: false, error: 'Ошибка сервера' });
+  }
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start server
+
 async function start() {
   try {
     await initData();

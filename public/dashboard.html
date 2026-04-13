@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Tasks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="app-page">
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-left">
+        <a href="/index.html" class="back-link">← Задачи</a>
+        <h1 class="logo">Инструменты</h1>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="dashboard-section">
+
+        <div class="tools-grid">
+          <a href="/log-analyzer.html" class="tool-card">
+            <div class="tool-icon"></div>
+            <div class="tool-content">
+              <h3>Анализатор логов</h3>
+              <p>Топ-10 IP, HTTP методы, ошибки 404 из access.log</p>
+            </div>
+            <div class="tool-arrow">→</div>
+          </a>
+
+          <a href="/rpn-calculator.html" class="tool-card">
+            <div class="tool-icon"></div>
+            <div class="tool-content">
+              <h3>RPN Калькулятор</h3>
+              <p>Обратная польская нотация (постфиксная форма)</p>
+            </div>
+            <div class="tool-arrow">→</div>
+          </a>
+
+          <a href="/password-generator.html" class="tool-card">
+            <div class="tool-icon"></div>
+            <div class="tool-content">
+              <h3>Генератор паролей</h3>
+              <p>Безопасные пароли с настройками сложности</p>
+            </div>
+            <div class="tool-arrow">→</div>
+          </a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token');
+      const username = localStorage.getItem('username');
+
+      if (token && username) {
+        document.getElementById('username').textContent = username;
+      } else {
+        window.location.href = '/';
+      }
+
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        window.location.href = '/';
+      });
+    });
+  </script>
+</body>
+
+</html>

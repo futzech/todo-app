@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Анализатор логов | Tasks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="app-page">
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-left">
+        <a href="/dashboard.html" class="back-link">← Dashboard</a>
+        <h1 class="logo">Log Analyzer</h1>
+      </div>
+      <button id="logoutBtn" class="btn-logout">Выход</button>
+    </header>
+
+    <main class="main-content">
+      <section class="tool-section">
+        <div class="glass-card large">
+          <div class="upload-area">
+            <div class="upload-zone" id="uploadZone">
+              <div class="upload-icon"></div>
+              <h3>Перетащите access.log или выберите файл</h3>
+              <p>Поддержка Nginx/Apache форматов</p>
+              <input type="file" id="logFile" accept=".log,.txt" class="file-input">
+            </div>
+            <button id="analyzeBtn" class="btn-primary large" disabled> Проанализировать</button>
+          </div>
+
+          <div id="resultsSection" class="results-section hidden">
+            <div class="results-grid">
+              <div class="result-card">
+                <h4> Топ-10 IP адресов</h4>
+                <div id="topIPs" class="result-list"></div>
+              </div>
+              <div class="result-card">
+                <h4> HTTP методы</h4>
+                <div id="httpMethods" class="result-list"></div>
+              </div>
+              <div class="result-card full">
+                <h4> Ошибки 404</h4>
+                <div id="error404s" class="result-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="log-analyzer.js"></script>
+</body>
+</html>

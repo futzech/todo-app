@@ -1,143 +1,136 @@
-class SimplePasswordGenerator {
-    constructor() {
-        this.requiredChars = {
-            uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-            lowercase: 'abcdefghijklmnopqrstuvwxyz',
-            numbers: '0123456789',
-            symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
-        };
-        this.init();
+document.addEventListener('DOMContentLoaded', function() {
+  const generateBtn = document.getElementById('generateBtn');
+  const copyBtn = document.getElementById('copyBtn');
+  const passwordDisplay = document.getElementById('passwordDisplay');
+  const lengthSlider = document.getElementById('lengthSlider');
+  const lengthDisplay = document.getElementById('lengthDisplay');
+  const copyStatus = document.getElementById('copyStatus');
+  const logoutBtn = document.getElementById('logoutBtn');
+  
+  const uppercaseCb = document.getElementById('includeUppercase');
+  const lowercaseCb = document.getElementById('includeLowercase');
+  const numbersCb = document.getElementById('includeNumbers');
+  const symbolsCb = document.getElementById('includeSymbols');
+  
+  const strengthIndicator = document.getElementById('strengthIndicator');
+  const strengthFill = strengthIndicator.querySelector('.strength-fill');
+  const strengthText = document.getElementById('strength-text');
+
+  let currentPassword = '';
+
+  logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    window.location.href = '/';
+  });
+
+  lengthSlider.addEventListener('input', (e) => {
+    lengthDisplay.textContent = e.target.value;
+    updateStrength();
+  });
+
+  generateBtn.addEventListener('click', generatePassword);
+
+  function generatePassword() {
+    const length = parseInt(lengthSlider.value);
+    const charset = [];
+    
+    if (uppercaseCb.checked) charset.push('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+    if (lowercaseCb.checked) charset.push('abcdefghijklmnopqrstuvwxyz');
+    if (numbersCb.checked) charset.push('0123456789');
+    if (symbolsCb.checked) charset.push('!@#$%^&*()_+-=[]{}|;:,.<>?');
+
+    if (charset.length === 0) {
+      showError('Выберите хотя бы один тип символов!');
+      return;
     }
 
-    init() {
-        this.bindEvents();
-        this.updateLengthDisplay();
-        this.updateRequirements();
+    let password = '';
+    const allChars = charset.join('');
+    
+    const requiredChars = [];
+    if (uppercaseCb.checked) requiredChars.push(getRandom('ABCDEFGHIJKLMNOPQRSTUVWXYZ'));
+    if (lowercaseCb.checked) requiredChars.push(getRandom('abcdefghijklmnopqrstuvwxyz'));
+    if (numbersCb.checked) requiredChars.push(getRandom('0123456789'));
+    if (symbolsCb.checked) requiredChars.push(getRandom('!@#$%^&*()_+-=[]{}|;:,.<>?'));
+    
+    password = requiredChars.join('');
+    
+    for (let i = requiredChars.length; i < length; i++) {
+      password += getRandom(allChars);
     }
+    
+    password = password.split('').sort(() => Math.random() - 0.5).join('');
+    
+    currentPassword = password;
+    passwordDisplay.textContent = password;
+    passwordDisplay.className = 'password-box generated';
+    
+    updateStrength();
+    generateBtn.textContent = ' Сгенерировать новый';
+  }
 
-    bindEvents() {
-        document.getElementById('generateBtn').onclick = () => this.generatePassword();
-        document.getElementById('lengthSlider').oninput = () => {
-            this.updateLengthDisplay();
-            this.updateRequirements();
-        };
-        document.getElementById('copyBtn').onclick = () => this.copyPassword();
+
+  copyBtn.addEventListener('click', async () => {
+    if (!currentPassword) return;
+    
+    try {
+      await navigator.clipboard.writeText(currentPassword);
+      showCopyStatus(' Скопировано!', 'success');
+      copyBtn.classList.add('copied');
+      setTimeout(() => copyBtn.classList.remove('copied'), 2000);
+    } catch (err) {
+      showCopyStatus('Ошибка копирования', 'error');
     }
+  });
 
-    updateLengthDisplay() {
-        const slider = document.getElementById('lengthSlider');
-        const display = document.getElementById('lengthDisplay');
-        display.textContent = slider.value;
+  function getRandom(str) {
+    return str[Math.floor(Math.random() * str.length)];
+  }
+
+  function updateStrength() {
+    const length = parseInt(lengthSlider.value);
+    let score = 0;
+    let text = '';
+    
+    if (length >= 16) score += 25;
+    if (uppercaseCb.checked) score += 20;
+    if (lowercaseCb.checked) score += 15;
+    if (numbersCb.checked) score += 20;
+    if (symbolsCb.checked) score += 20;
+    
+    strengthFill.style.width = `${Math.min(score, 100)}%`;
+    
+    if (score >= 90) {
+      strengthFill.className = 'strength-fill excellent';
+      text = 'Отлично 💪';
+    } else if (score >= 70) {
+      strengthFill.className = 'strength-fill good';
+      text = 'Хорошо 👍';
+    } else if (score >= 50) {
+      strengthFill.className = 'strength-fill medium';
+      text = 'Средне ⚠️';
+    } else {
+      strengthFill.className = 'strength-fill weak';
+      text = 'Слабо 😬';
     }
+    
+    strengthText.textContent = text;
+  }
 
-    generatePassword() {
-        const length = parseInt(document.getElementById('lengthSlider').value);
+  function showCopyStatus(message, type) {
+    copyStatus.textContent = message;
+    copyStatus.className = `copy-status ${type}`;
+    setTimeout(() => {
+      copyStatus.textContent = '';
+      copyStatus.className = 'copy-status';
+    }, 3000);
+  }
 
-        // Обеспечиваем наличие всех требуемых символов
-        let password = '';
+  function showError(message) {
+    passwordDisplay.textContent = message;
+    passwordDisplay.className = 'password-box error';
+  }
 
-        // Добавляем по одному обязательному символу
-        password += this.requiredChars.uppercase[Math.floor(Math.random() * this.requiredChars.uppercase.length)];
-        password += this.requiredChars.lowercase[Math.floor(Math.random() * this.requiredChars.lowercase.length)];
-        password += this.requiredChars.numbers[Math.floor(Math.random() * this.requiredChars.numbers.length)];
-        password += this.requiredChars.symbols[Math.floor(Math.random() * this.requiredChars.symbols.length)];
-
-        // Заполняем остальную длину случайными символами
-        const allChars = [...this.requiredChars.uppercase, ...this.requiredChars.lowercase,
-        ...this.requiredChars.numbers, ...this.requiredChars.symbols];
-
-        for (let i = 4; i < length; i++) {
-            password += allChars[Math.floor(Math.random() * allChars.length)];
-        }
-
-        // Перемешиваем
-        password = password.split('').sort(() => Math.random() - 0.5).join('');
-
-        this.displayPassword(password);
-        this.updateRequirements(password);
-    }
-
-    displayPassword(password) {
-        const display = document.getElementById('passwordDisplay');
-        display.textContent = password;
-
-        display.className = 'password-display strong';
-    }
-
-    updateRequirements(password = '') {
-        const reqList = document.getElementById('requirementsList');
-
-        const requirements = [
-            { id: 'uppercase', label: '1+ Uppercase letter', test: /[A-Z]/ },
-            { id: 'lowercase', label: '1+ Lowercase letter', test: /[a-z]/ },
-            { id: 'number', label: '1+ Number', test: /[0-9]/ },
-            { id: 'symbol', label: '1+ Special symbol', test: /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/ }
-        ];
-
-        reqList.innerHTML = requirements.map(req => {
-            const met = password === '' ? false : req.test.test(password);
-            return `
-        <div class="requirement ${met ? 'met' : 'not-met'}">
-          ${req.label}
-        </div>
-      `;
-        }).join('');
-    }
-
-    copyPassword() {
-        const password = document.getElementById('passwordDisplay').textContent.trim();
-        const copyBtn = document.getElementById('copyBtn');
-        const status = document.getElementById('copyStatus');
-        const originalText = '📋 Copy Password';
-
-        if (!password || password === 'Click Generate to create your secure password') {
-            return;
-        }
-
-        // Сохраняем оригинальный текст
-        const originalBtnText = copyBtn.textContent;
-
-        // Копируем
-        navigator.clipboard.writeText(password).then(() => {
-            // Меняем текст и показываем статус
-            copyBtn.textContent = 'Copied!';
-            status.textContent = 'Password copied!';
-            status.classList.add('show');
-
-            // ВОЗВРАЩАЕМ через 2 секунды
-            setTimeout(() => {
-                copyBtn.textContent = originalBtnText; 
-                status.classList.remove('show');
-                status.textContent = '';
-            }, 2200);
-
-        }).catch((err) => {
-            console.warn('Clipboard failed:', err);
-            // Fallback
-            const textArea = document.createElement('textarea');
-            textArea.value = password;
-            textArea.style.position = 'fixed';
-            textArea.style.opacity = '0';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-
-            copyBtn.textContent = 'Copied!';
-            status.textContent = 'Copied (fallback)';
-            status.classList.add('show');
-
-            setTimeout(() => {
-                copyBtn.textContent = originalBtnText;
-                status.classList.remove('show');
-                status.textContent = '';
-            }, 2200);
-        });
-    }
-}
-
-// Запуск
-document.addEventListener('DOMContentLoaded', () => {
-    new SimplePasswordGenerator();
+  updateStrength();
 });

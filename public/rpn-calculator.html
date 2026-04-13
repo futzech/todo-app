@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RPN Калькулятор | Tasks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="app-page">
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-left">
+        <a href="/dashboard.html" class="back-link">← Dashboard</a>
+        <h1 class="logo">RPN Calculator</h1>
+      </div>
+      <button id="logoutBtn" class="btn-logout">Выход</button>
+    </header>
+
+    <main class="main-content">
+      <section class="tool-section">
+        <div class="glass-card large">
+          <div class="rpn-input-section">
+            <div class="input-group large">
+              <input type="text" id="rpnInput" placeholder="3 4 + 2 * или 10 5 / 2 +" autocomplete="off">
+              <button id="calculateBtn" class="btn-primary"> Вычислить</button>
+            </div>
+            <div id="resultBox" class="result-box">Введите выражение для вычисления</div>
+          </div>
+
+          <div class="history-section">
+            <h4> История вычислений</h4>
+            <div id="historyList" class="history-list"></div>
+          </div>
+
+          <div class="examples-section">
+            <h4>Примеры:</h4>
+            <div class="examples-grid">
+              <button class="btn-example" data-expr="3 4 +">3 4 + = 7</button>
+              <button class="btn-example" data-expr="10 5 / 2 +">10 5 / 2 + = 3</button>
+              <button class="btn-example" data-expr="2 3 4 + *">2 3 4 + * = 14</button>
+              <button class="btn-example" data-expr="15 3 2 * - /">15 3 2 * - / = 3</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="rpn-calculator.js"></script>
+</body>
+</html>

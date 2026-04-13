@@ -78,7 +78,7 @@ class TodoApp {
     });
   }
 
-  // API ЛОГИКА + 204 
+
   async apiCall(endpoint, options = {}) {
     const config = {
       headers: {
