@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard | Tasks</title>
+  <title>Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -15,9 +15,11 @@
   <div class="app-container">
     <header class="app-header">
       <div class="header-left">
-        <a href="/index.html" class="back-link">← Задачи</a>
+        
         <h1 class="logo">Инструменты</h1>
+        <span id="username" class="username">username</span>
       </div>
+      <button id="logoutBtn" class="btn-logout">Выход</button>
     </header>
 
     <main class="main-content">
@@ -50,12 +52,21 @@
             </div>
             <div class="tool-arrow">→</div>
           </a>
+
+          <a href="/todolist.html" class="tool-card">
+            <div class="tool-icon"></div>
+            <div class="tool-content">
+              <h3>Блокнот</h3>
+              <p>Составляйте задачи на каждый день</p>
+            </div>
+            <div class="tool-arrow">→</div>
+          </a>
         </div>
       </section>
     </main>
   </div>
 
-  <script>
+  <script src="script.js">
     document.addEventListener('DOMContentLoaded', () => {
       const token = localStorage.getItem('token');
       const username = localStorage.getItem('username');

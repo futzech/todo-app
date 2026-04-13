@@ -9,7 +9,7 @@ class TodoApp {
 
   init() {
     if (this.isAuthPage()) {
-      if (this.token) window.location.href = '/';
+      if (this.token) window.location.href = '/dashboard.html';
     } else {
       if (!this.token) {
         window.location.href = '/login.html';
