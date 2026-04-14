@@ -103,16 +103,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (score >= 90) {
       strengthFill.className = 'strength-fill excellent';
-      text = 'Отлично 💪';
+      text = 'Отлично ';
     } else if (score >= 70) {
       strengthFill.className = 'strength-fill good';
-      text = 'Хорошо 👍';
+      text = 'Хорошо ';
     } else if (score >= 50) {
       strengthFill.className = 'strength-fill medium';
-      text = 'Средне ⚠️';
+      text = 'Средне ';
     } else {
       strengthFill.className = 'strength-fill weak';
-      text = 'Слабо 😬';
+      text = 'Слабо ';
     }
     
     strengthText.textContent = text;
