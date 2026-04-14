@@ -10,10 +10,69 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-dev';
 
+// === ЛОГИРОВАНИЕ ВСЕХ ЗАПРОСОВ ===
+const logDir = path.join(__dirname, 'logs');
+const fsSync = require('fs');
+
+if (!fsSync.existsSync(logDir)) {
+    fsSync.mkdirSync(logDir, { recursive: true });
+}
+
+const getLogFileName = () => {
+    const date = new Date().toISOString().split('T')[0];
+    return path.join(logDir, `requests-${date}.log`);
+};
+
+const requestLogger = (req, res, next) => {
+    const startTime = Date.now();
+    const clientIP = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || 
+                     req.socket.remoteAddress || 
+                     req.connection.remoteAddress || 
+                     req.ip;
+    
+    // Логируем запрос
+    const requestLog = `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} ` +
+                      `| IP: ${clientIP} ` +
+                      `| UA: ${req.get('User-Agent')?.substring(0, 100) || 'N/A'} ` +
+                      `| Body: ${JSON.stringify(req.body).substring(0, 500)}...\n`;
+    
+    fsSync.appendFileSync(getLogFileName(), requestLog);
+    
+    // Перехватываем ответ
+    const oldWrite = res.write;
+    const oldEnd = res.end;
+    let responseBody = '';
+    
+    res.write = function(chunk) {
+        responseBody += chunk;
+        return oldWrite.apply(this, arguments);
+    };
+    
+    res.end = function(chunk) {
+        if (chunk) responseBody += chunk;
+        
+        const duration = Date.now() - startTime;
+        const responseSize = Buffer.byteLength(responseBody, 'utf8');
+        
+        const responseLog = `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} ` +
+                           `| ${duration}ms | Status: ${res.statusCode} ` +
+                           `| Size: ${responseSize}B ` +
+                           `| Resp: ${responseBody.substring(0, 500)}...\n\n`;
+        
+        fsSync.appendFileSync(getLogFileName(), responseLog);
+        
+        return oldEnd.apply(this, arguments);
+    };
+    
+    next();
+};
+
+// Middleware
 app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.use(requestLogger);  // ← ЛОГИРОВАНИЕ ВСЕХ ЗАПРОСОВ
 app.use(express.static('public'));
 
 const USERS_FILE = path.join(__dirname, 'users.json');
@@ -240,13 +299,13 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
-
 async function start() {
   try {
     await initData();
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
       console.log(`📁 Data: ${__dirname}`);
+      console.log(`📊 Logs: ${logDir}/requests-YYYY-MM-DD.log`);
     });
   } catch (error) {
     console.error('Server start failed:', error);
