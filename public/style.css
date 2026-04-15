@@ -9,7 +9,7 @@
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background: #379cc4;
-  background: linear-gradient(90deg, rgba(55, 156, 196, 1) 9%, rgba(76, 184, 155, 1) 32%, rgba(87, 199, 133, 1) 52%, rgba(237, 221, 83, 1) 76%, rgba(237, 221, 83, 1) 88%);
+  background: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
   min-height: 100vh;
   color: #1a1a1a;
   overflow-x: hidden;
