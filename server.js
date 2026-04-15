@@ -73,7 +73,7 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);  // ← ЛОГИРОВАНИЕ ВСЕХ ЗАПРОСОВ
-app.use(express.static('public'));
+app.use(express.static('public', { extensions: ['html'] }));
 
 const USERS_FILE = path.join(__dirname, 'users.json');
 const TASKS_FILE = path.join(__dirname, 'tasks.json');
